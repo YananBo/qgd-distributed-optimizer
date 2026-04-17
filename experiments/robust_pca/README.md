@@ -1,6 +1,6 @@
 # Experiment: Video Background/Foreground Separation via Distributed Robust PCA
 
-> **Industry relevance**: Video background subtraction is a core component in production surveillance systems (Amazon, Google, Ring), autonomous driving perception pipelines (Waymo, Tesla), video conferencing background blur (Zoom, Teams), and content moderation at scale. This experiment demonstrates how QGD enables **distributed, communication-efficient** video decomposition across edge devices — a key requirement when raw video cannot be centralized due to bandwidth or privacy constraints.
+> **Industry relevance**: Video background subtraction is a core component in production surveillance systems, autonomous driving perception pipelines, video conferencing background blur, and content moderation at scale. This experiment demonstrates how QGD enables **distributed, communication-efficient** video decomposition across edge devices — a key requirement when raw video cannot be centralized due to bandwidth or privacy constraints.
 
 ---
 
