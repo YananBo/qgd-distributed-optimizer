@@ -11,7 +11,7 @@ A PyTorch implementation of **Quantized Gradient Descent (QGD)** — a communica
 ---
 
 ## Why QGD Matters
-Distributed training is the backbone of modern ML infrastructure — but two problems keep showing up in production:
+Distributed training is the backbone of modern ML infrastructure — but some problems keep showing up in production:
 
 | Production Pain Point | How QGD Solves It |
 |----------------------|-------------------|
