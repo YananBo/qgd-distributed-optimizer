@@ -15,10 +15,11 @@ Distributed training is the backbone of modern ML infrastructure — but some pr
 
 | Production Pain Point | How QGD Solves It |
 |----------------------|-------------------|
-| **Communication bottleneck** — gradient/parameter exchange dominates wall-clock time in multi-GPU and cross-datacenter training (the #1 scaling blocker at Google, Meta, Microsoft) | QGD compresses all inter-node communication via stochastic quantization — adjustable from 32-bit down to just a few bits per parameter, with **provable convergence guarantees** |
+| **Communication bottleneck** — gradient/parameter exchange dominates wall-clock time in multi-GPU and cross-datacenter training | QGD compresses all inter-node communication via stochastic quantization — adjustable from 32-bit down to just a few bits per parameter, with **provable convergence guarantees** |
 | **Saddle points in nonconvex landscapes** — large models (LLMs, diffusion, recommender systems) have optimization landscapes riddled with saddle points that degrade model quality | Most approaches inject artificial noise (extra compute + tuning). QGD gets saddle-point escape **for free** from the quantization noise that's already there for compression |
 | **Edge / federated deployment** — surveillance cameras, autonomous vehicles, IoT sensors can't centralize raw data due to bandwidth and privacy | Agents exchange only quantized model parameters; raw data never leaves the device |
-| **No extra hyperparameters** — perturbed GD methods add noise scales, schedules, and warm-up stages to tune | QGD's perturbation comes from quantization itself — the only new knob is quantization level, which directly maps to your bandwidth budget |
+| **No extra hyperparameters** — perturbed GD methods add noise scales, schedules, and warm-up stages to tune | QGD's perturbation comes from quantization itself — the only practical knob is quantization level, which directly maps to your bandwidth budget |
+
 
 **Key insight**: Quantization noise — traditionally treated as a nuisance to suppress — is actually *exactly the right kind of perturbation* to escape saddle points. QGD is the first method to prove this and exploit it.
 
@@ -26,24 +27,21 @@ Distributed training is the backbone of modern ML infrastructure — but some pr
 
 ## Highlights
 
-- **Saddle-point avoidance via quantization**: Switching even/odd quantization grids ensures persistent perturbation in every direction — provably escaping all strict saddle points
-- **Communication efficiency**: Up to 10× compression of inter-node communication with no accuracy loss
+- **Saddle-point avoidance via quantization**: Switching quantization sets ensures persistent perturbation in every direction — provably escaping all strict saddle points
+- **Communication efficiency**: Compression of inter-node communication with no accuracy loss
 - **Convergence to second-order stationary points**: The first distributed quantized method with this guarantee
-- **Drop-in PyTorch optimizer**: Implemented as a `torch.optim.Optimizer` subclass — swap it into any distributed training pipeline
+- **Drop-in PyTorch optimizer**: Implemented as a `torch.optim.Optimizer` subclass
 
 ---
 
 ## Experiments
 
-| Experiment | Industry Application | What It Demonstrates | Docs |
-|-----------|---------------------|---------------------|------|
-| [Neural Network](experiments/neural_network/) | Distributed model training (multi-GPU / cross-datacenter) | QGD vs. 7 baseline optimizers on CIFAR-10/MNIST with 5 workers, IID & non-IID data splits | [→ README](experiments/neural_network/README.md) |
-| [Robust PCA](experiments/robust_pca/) | Video surveillance — real-time background/foreground separation across edge cameras | Privacy-preserving distributed decomposition; raw video never leaves each camera node | [→ README](experiments/robust_pca/README.md) |
-| [Tensor Decomposition](experiments/tensor_decomposition/) | Recommender systems, signal processing — distributed tensor factorization | Escaping saddle points in Tucker decomposition across 5 agents | [→ README](experiments/tensor_decomposition/README.md) |
-| [Binary Classification](experiments/binary_classification/) | Theoretical validation | 2-D saddle-point landscape: QGD escapes, vanilla DGD gets stuck | [→ README](experiments/binary_classification/README.md) |
-
----
-
+| Experiment | Motivating Application | What This Code Demonstrates | Docs |
+|-----------|------------------------|-----------------------------|------|
+| [Neural Network](experiments/neural_network/) | Decentralized / distributed model training | QGD vs. 7 decentralized optimizer baselines on CIFAR-10/MNIST with 5 workers, IID and non-IID data splits | [README](experiments/neural_network/README.md) |
+| [Robust PCA](experiments/robust_pca/) | Edge-video background subtraction | 5-agent distributed robust PCA simulation on Wallflower video frames; agents keep local frame shards and exchange quantized low-rank factors, with QGD and DGD implementations logging reconstruction error | [README](experiments/robust_pca/README.md) |
+| [Tensor Decomposition](experiments/tensor_decomposition/) | Tensor factorization for scientific data, signal processing, and recommender-style workloads | QGD implementation for Tucker decomposition with 5-agent quantized consensus, even/odd stochastic quantization, stepsize holding, and CSV logging of per-agent losses and reconstruction metrics | [README](experiments/tensor_decomposition/README.md) |
+| [Binary Classification](experiments/binary_classification/) | Toy saddle-point diagnostic | 2-D regularized logistic-loss landscape for visualizing quantization-induced perturbations and comparing QGD with vanilla DGD trajectories | [README](experiments/binary_classification/README.md) |
 ## Quick Start
 
 ```bash
