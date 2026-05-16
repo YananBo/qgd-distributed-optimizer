@@ -184,7 +184,7 @@ class QGD(Base):
             for i, p in enumerate(group['params']):
                 if p.grad is None:
                     sub -= 1
-                    continue#跳过当前这一步，即不做summat,直接到下一个i,p
+                    continue
                 summat = torch.zeros(p.data.size()).to(device)
                 for j in range(agents):
                     q_vars = torch.empty_like(vars[j][i+sub]).to(device)
