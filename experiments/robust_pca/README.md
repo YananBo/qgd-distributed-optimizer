@@ -13,7 +13,7 @@ Given a matrix `D` of video frames (each frame flattened as a row), decompose it
 
 This is the classic **Robust PCA** problem. The factored formulation `D ≈ UV + S` is nonconvex and riddled with saddle points — standard gradient methods get stuck, producing blurry or incomplete foreground masks.
 
-**QGD solves this**: its switching quantization injects structured perturbations that escape saddle points *for free*, while simultaneously compressing inter-device communication by up to 10× compared to full-precision exchange.
+**QGD** helps address this challenge by using switching quantization as a structured source of perturbation. In nonconvex low-rank factorization, this perturbation can help reduce saddle-point stagnation without adding a separate noise mechanism. At the same time, low-bit communication reduces the number of transmitted bits per iteration compared with full-precision exchange.
 
 ---
 
@@ -24,7 +24,7 @@ This is the classic **Robust PCA** problem. The factored formulation `D ≈ UV +
 | **Edge deployment** — cameras can't stream raw video to a central server | Agents process local video shards; only quantized parameters are exchanged |
 | **Bandwidth constraints** — network links between edge nodes are limited | Quantized communication reduces bits per iteration (adjustable via `--quantization-levels`) |
 | **Privacy** — raw frames never leave the local device | Only compressed model parameters (U, V factors) are shared, not pixel data |
-| **Nonconvex landscape** — saddle points degrade separation quality | Switching quantization provably escapes saddle points → cleaner foreground masks |
+| **Nonconvex landscape** — saddle points degrade separation quality | Quantization provably escapes saddle points |
 
 ---
 
